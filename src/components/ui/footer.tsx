@@ -26,7 +26,7 @@ export default function Footer() {
                 <a href="/" className="text-gray-600 hover:text-gray-900 transition duration-150 ease-in-out">Home</a>
               </li>
               <li className="mb-2">
-                <a href="/about-us" className="text-gray-600 hover:text-gray-900 transition duration-150 ease-in-out">Sobre Nosotros</a>
+                <a href="/about" className="text-gray-600 hover:text-gray-900 transition duration-150 ease-in-out">Sobre Nosotros</a>
               </li>
               <li className="mb-2">
                 <a href="/compare-prices" className="text-gray-600 hover:text-gray-900 transition duration-150 ease-in-out">Comparar Precios</a>

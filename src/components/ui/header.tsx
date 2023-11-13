@@ -40,7 +40,7 @@ export default function Header() {
                 <Link href="/history" className="font-medium text-gray-600 hover:text-gray-900 px-5 py-3 flex items-center transition duration-150 ease-in-out">Historial</Link>
               </li>
               <li>
-                <Link href="/compare-prices" className="font-medium text-gray-600 hover:text-gray-900 px-5 py-3 flex items-center transition duration-150 ease-in-out">Sobre Nosotros</Link>
+                <Link href="/about" className="font-medium text-gray-600 hover:text-gray-900 px-5 py-3 flex items-center transition duration-150 ease-in-out">Sobre Nosotros</Link>
               </li>
               <li>
                 <Link href="/compare-prices" className="btn-sm text-gray-200 bg-gray-900 hover:bg-gray-800 ml-3">Comparar Precios</Link>
