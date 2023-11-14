@@ -32,7 +32,7 @@ export default function Features() {
         <div className="pt-12 md:pt-20">
 
           {/* Section header */}
-          <div className="max-w-3xl mx-auto text-center pb-12 md:pb-16">
+          <div className="max-w-3xl mx-auto text-center pb-12 md:pb-16" data-aos="fade-right">
             <h1 className="h2 mb-4">Explora las soluciones que ofrecemos</h1>
             <p className="text-xl text-gray-600">.</p>
           </div>
