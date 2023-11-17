@@ -8,3 +8,8 @@ export interface IProducts {
     id_subcategoria: number;
     id_rango: number;
 }
+
+export interface IProductSize {
+    id: number;
+    rango_texto: string;
+}
