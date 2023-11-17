@@ -15,8 +15,8 @@ export interface ISubcategoria {
     subcategoria_front: string,
 }
 
-export interface IComuna {
+export interface IDataByComuna {
     departamentos: IDepartamento[],
     categorias: ICategoria[],
-    subcategorias: ISubcategoria[],
+    // subcategorias: ISubcategoria[],
 };
