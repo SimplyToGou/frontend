@@ -52,9 +52,11 @@ export default function Compare() {
     }, 300);
   };
 
-  const handleChangeSelectProduct = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleChangeSelectProduct = async (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedProductId = parseInt(event.target.value);
     setSelectedProduct(event.target.value);
-    setIdProduct(parseInt(selectedProduct));
+    setIdProduct(selectedProductId);
+    await getSizeOfProductFromApi(selectedProductId);
     if (event.target.value && !selectedOptions.includes(event.target.value)) {
       setSelectedOptions((prevOptions) => [...prevOptions, event.target.value]);
     }
@@ -103,12 +105,12 @@ export default function Compare() {
     }
   }
 
-  async function getSizeOfProductsFromApi() {
+  async function getSizeOfProductFromApi(productId : number) {
     try {
-      const response = await getSizeOfProduct(idProduct);
+      const response = await getSizeOfProduct(productId);
       if (!response) throw new Error(`Error al obtener el tamaño del producto`);
-      setSizeOfProduct(response);
-      console.log(response);
+      setSizeOfProduct(response["tamanos"]);
+      console.log(response["tamanos"]);
     } catch (error) {
       console.log(error);
     }
@@ -118,7 +120,6 @@ export default function Compare() {
     (async () => {
       await getProductsFromApi();
       await getDataByComunaFromApi();
-      await getSizeOfProductsFromApi();
     })();
   }, []);
 
@@ -152,6 +153,8 @@ export default function Compare() {
             <p className="mt-1 text-sm leading-6 text-gray-600">También puedes elegir 7, 9, 11, 13 o 5.</p>
 
             <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+              
+              {/* Budget */}
               <div className="sm:col-span-2 sm:col-start-1">
                 <label htmlFor="money" className="block text-sm font-medium leading-6 text-gray-900">
                   Dinero establecido
@@ -161,15 +164,17 @@ export default function Compare() {
                 </div>
               </div>
 
+              {/* Min Products */}
               <div className="sm:col-span-3">
                 <label htmlFor="quantity" className="block text-sm font-medium leading-6 text-gray-900">
                   Min cantidad de productos
                 </label>
                 <div className="mt-2">
-                  <input type="number" name="quantity" id="quantity" autoComplete="5" defaultValue={0} className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6" placeholder="5" />
+                  <input type="number" name="quantity" id="quantity" autoComplete={`${MIN_QUANTITY_OF_PRODUCTS}`} defaultValue={0} className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6" placeholder="5" />
                 </div>
               </div>
 
+              {/* Product */}
               <div className="sm:col-span-3">
                 <label htmlFor="product" className="block text-sm font-medium leading-6 text-gray-900">
                   Busca tus productos
@@ -182,7 +187,7 @@ export default function Compare() {
                     </option>
                     {products.map((product) => (
                       <React.Fragment key={product.id}>
-                        <option key={product.id} value={product.subcategoria_front}>
+                        <option key={product.id} value={product.id}>
                           {product.subcategoria_front}
                         </option>
                       </React.Fragment>
@@ -191,6 +196,7 @@ export default function Compare() {
                 </div>
               </div>
 
+              {/* Category */}
               <div className="sm:col-span-3">
                 <label htmlFor="category" className="block text-sm font-medium leading-6 text-gray-900">
                   Busca por categoría
@@ -212,6 +218,7 @@ export default function Compare() {
                 </div>
               </div>
 
+              {/* Department */}
               <div className="sm:col-span-3">
                 <label htmlFor="department" className="block text-sm font-medium leading-6 text-gray-900">
                   Selecciona un departamento
@@ -230,6 +237,7 @@ export default function Compare() {
                 </div>
               </div>
 
+              {/* Size */}
               <div className="sm:col-span-3">
                 <label htmlFor="size" className="block text-sm font-medium leading-6 text-gray-900">
                   Selecciona un tamaño
@@ -250,6 +258,8 @@ export default function Compare() {
                   </select>
                 </div>
               </div>
+
+              {/* List */}
               <div className="sm:col-span-6 w-full">
                 <h2 className="text-base font-semibold leading-7 text-gray-900">Lista de productos</h2>
                 <ul className="">
@@ -263,6 +273,7 @@ export default function Compare() {
                   ))}
                 </ul>
               </div>
+
             </div>
           </div>
 
