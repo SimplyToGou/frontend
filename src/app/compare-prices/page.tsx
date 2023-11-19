@@ -23,8 +23,11 @@ export default function Compare() {
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [selectedDepartment, setSelectedDepartment] = useState<string>("");
   const [selectedSize, setSelectedSize] = useState<string>("");
+  const [selectedSizeId,setSelectedSizeId] = useState<number>(0);
   const [selectedOptionsId, setSelectedOptionsId] = useState<number[]>([]);
+  const [selectedOptionsSizesId, setSelectedOptionsSizesId] = useState<number[]>([]);
   const [selectedOptionsString, setSelectedOptionsString] = useState<string[]>([]);
+  const [selectedOptionsSizesString, setSelectedOptionsSizesString] = useState<string[]>([]);
   const [filterByProduct, setFilterByProduct] = useState(false);  
   const [filterByDepartment, setFilterByDepartment] = useState(false);
   const MIN_QUANTITY_OF_PRODUCTS = 5;
@@ -53,14 +56,14 @@ export default function Compare() {
 
   const handleChangeSelectProduct = async (event: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedProductId = parseInt(event.target.value);
-    setSelectedProduct(event.target.value);
+    setSelectedProduct(event.target["options"][event.target["options"].selectedIndex].text);
     setIdProduct(selectedProductId);
     await getSizeOfProductFromApi(selectedProductId);
-    if (event.target.value && !selectedOptionsId.includes(parseInt(event.target.value))) {
-      setSelectedOptionsId((prevOptions) => [...prevOptions, parseInt(event.target.value)]);
-      setSelectedOptionsString((prevOptions) => [...prevOptions, event.target["options"][event.target["options"].selectedIndex].text]);
-    }
+
+
     console.log("User Selected Product - ", event.target["options"][event.target["options"].selectedIndex].text);
+
+
   };
 
   const handleChangeSelectCategory = async (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -77,7 +80,23 @@ export default function Compare() {
 
   const handleChangeSelectSize = (event: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedSize(event.target.value);
+
     console.log("User Selected Size - ", event.target.value);
+    const selectedIndex = event.target.options.selectedIndex;
+    const dkey = event.target.options[selectedIndex].getAttribute('data-key')
+    setSelectedSizeId(parseInt(dkey ?? "0"))
+
+    if (event.target.value && event.target.value != "" && dkey && selectedProduct && (!selectedOptionsId.includes(idProduct) || !selectedOptionsSizesId.includes(parseInt(dkey)))) {
+      setSelectedOptionsId((prevOptions) => [...prevOptions, idProduct]);
+      setSelectedOptionsString((prevOptions) => [...prevOptions, selectedProduct]);
+      setSelectedOptionsSizesId((prevOptions) => [...prevOptions, parseInt(dkey)]);
+      setSelectedOptionsSizesString((prevOptions) => [...prevOptions, event.target.value]);
+    }
+    console.log(selectedSize)
+    console.log(selectedOptionsString)
+    console.log(selectedOptionsSizesString)
+
+
   };
 
   const handleRemove = (event: React.MouseEvent, itemToRemove: string) => {
@@ -130,9 +149,11 @@ export default function Compare() {
   async function getSizeOfProductFromApi(productId: number) {
     try {
       const response = await getSizeOfProduct(productId);
+
       if (!response) throw new Error(`Error al obtener el tamaño del producto`);
       setSizeOfProduct(response["tamanos"]);
       console.log(response["tamanos"]);
+      console.log("Halt")
     } catch (error) {
       console.log(error);
     }
@@ -308,7 +329,7 @@ export default function Compare() {
                     </option>
                     {sizeOfProduct?.map((size) => (
                       <React.Fragment key={size.id}>
-                        <option key={size.id} value={size.rango_texto}>
+                        <option key={size.id} data-key={size.id} value={size.rango_texto}>
                           {size.rango_texto}
                         </option>
                       </React.Fragment>
@@ -324,6 +345,8 @@ export default function Compare() {
                   {selectedOptionsString.map((product, index) => (
                     <li className={`flex items-center justify-between w-full mb-3 ${index < selectedOptionsString.length - 1 ? "border-b" : ""}`} key={index}>
                       <p className="">{product}</p>
+                      {""}
+                      <p className="">{selectedOptionsSizesString[index]}</p>
                       <button className="text-red-700 hover:text-white border border-red-600 hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-red-600 font-medium rounded-lg text-sm px-5 py-2 text-center m-4 dark:border-red-600 dark:text-red-600 dark:hover:text-white dark:hover:bg-red-600 dark:focus:ring-red-600" onClick={(event) => handleRemove(event, product)}>
                         Eliminar
                       </button>
