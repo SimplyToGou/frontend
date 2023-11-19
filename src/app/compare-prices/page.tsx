@@ -3,7 +3,7 @@ import "aos/dist/aos.css";
 import AOS from "aos";
 import React, { useState, useEffect } from "react";
 import { getDataApi } from "@/services/api-observatorio";
-import { getProducts, getSizeOfProduct } from "@/services/api-simply-to-gou";
+import {getProducts, getResultsOfCart, getSizeOfProduct} from "@/services/api-simply-to-gou";
 import { getCategories } from "@/services/api-simply-to-gou";
 import { getProductsByCategory } from "@/services/api-simply-to-gou";
 import { IProducts, IProductSize } from "@/interfaces/products";
@@ -11,6 +11,8 @@ import { IDataByComuna, ISubcategoria } from "@/interfaces/comuna";
 import { Products } from "@/data/products";
 import { Comunas } from "@/data/id_comunas";
 import { SizesOfProducts } from "@/data/product_sizes";
+import {Simulate} from "react-dom/test-utils";
+import reset = Simulate.reset;
 
 export default function Compare() {
   const [products, setProducts] = useState<ISubcategoria[]>([]);
@@ -60,6 +62,12 @@ export default function Compare() {
     setIdProduct(selectedProductId);
     await getSizeOfProductFromApi(selectedProductId);
 
+    console.log(sizeOfProduct)
+
+    if (event.target.value && !selectedOptionsId.includes(parseInt(event.target.value)) && sizeOfProduct.length == 1) {
+      setSelectedOptionsId((prevOptions) => [...prevOptions, parseInt(event.target.value)]);
+      setSelectedOptionsString((prevOptions) => [...prevOptions, event.target["options"][event.target["options"].selectedIndex].text]);
+    }
 
     console.log("User Selected Product - ", event.target["options"][event.target["options"].selectedIndex].text);
 
@@ -152,11 +160,29 @@ export default function Compare() {
 
       if (!response) throw new Error(`Error al obtener el tamaño del producto`);
       setSizeOfProduct(response["tamanos"]);
-      console.log(response["tamanos"]);
-      console.log("Halt")
+
+
+
+
+
+
     } catch (error) {
       console.log(error);
     }
+  }
+
+  async function HandleSubmit() {
+    const reqdata: JSON[] = []
+    selectedOptionsId.forEach((product, index)=>{
+      let data = {"id_subcategoria": product, "id_rango": selectedOptionsSizesId[index]}
+
+      reqdata.push(JSON.parse(JSON.stringify(data)))
+    })
+    const rd = JSON.stringify({"productos": reqdata})
+    console.log(rd)
+
+    const result = await getResultsOfCart(rd)
+    console.log(result)
   }
 
   useEffect(() => {
@@ -164,6 +190,7 @@ export default function Compare() {
       await getProductsFromApi();
       await getDataByComunaFromApi();
     })();
+
   }, []);
 
   return (
@@ -354,6 +381,7 @@ export default function Compare() {
                   ))}
                 </ul>
               </div>
+
             </div>
             ) : (<></>)}
           </div>
@@ -363,7 +391,7 @@ export default function Compare() {
           <button type="button" className="text-sm font-semibold leading-6 text-gray-900">
             Cancel
           </button>
-          <button type="submit" className="rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+          <button type="button" className="rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600" onClick={HandleSubmit}>
             Save
           </button>
         </div>

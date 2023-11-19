@@ -1,4 +1,5 @@
 import { API_SCHEME, API_HOST, API_PORT } from "../../setupEnv";
+import {json} from "stream/consumers";
 
 const COMUNA = 336;
 
@@ -72,3 +73,28 @@ export const getSizeOfProduct = async (product_id: number) => {
     return false;
   }
 };
+
+
+export const getResultsOfCart = async (cart: any) => {
+  try {
+    const response = await fetch(
+        `${API_SCHEME}://${API_HOST}:${API_PORT}/results`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: cart
+        }
+    );
+    if (!response.ok) throw new Error("Error al obtener el resultado");
+    const data = await response.json();
+    console.log(data)
+    return data;
+
+  } catch (error) {
+    return false;
+  }
+
+
+}
