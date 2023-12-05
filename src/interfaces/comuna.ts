@@ -20,3 +20,10 @@ export interface IDataByComuna {
     categorias: ICategoria[],
     // subcategorias: ISubcategoria[],
 };
+
+export interface IMarket {
+    precio: string,
+    nombre: string,
+    direccion: string
+
+};

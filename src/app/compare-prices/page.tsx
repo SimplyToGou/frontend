@@ -7,7 +7,7 @@ import {getProducts, getResultsOfCart, getSizeOfProduct} from "@/services/api-si
 import { getCategories } from "@/services/api-simply-to-gou";
 import { getProductsByCategory } from "@/services/api-simply-to-gou";
 import { IProducts, IProductSize } from "@/interfaces/products";
-import { IDataByComuna, ISubcategoria } from "@/interfaces/comuna";
+import {IDataByComuna, IMarket, ISubcategoria} from "@/interfaces/comuna";
 import { Products } from "@/data/products";
 import { Comunas } from "@/data/id_comunas";
 import { SizesOfProducts } from "@/data/product_sizes";
@@ -32,6 +32,7 @@ export default function Compare() {
   const [selectedOptionsSizesString, setSelectedOptionsSizesString] = useState<string[]>([]);
   const [filterByProduct, setFilterByProduct] = useState(false);  
   const [filterByDepartment, setFilterByDepartment] = useState(false);
+  const [resultMarkets, setResultMarkets] = useState<IMarket[]>([])
   const MIN_QUANTITY_OF_PRODUCTS = 5;
   let timeoutId: NodeJS.Timeout | null = null;
 
@@ -64,10 +65,7 @@ export default function Compare() {
 
     console.log(sizeOfProduct)
 
-    if (event.target.value && !selectedOptionsId.includes(parseInt(event.target.value)) && sizeOfProduct.length == 1) {
-      setSelectedOptionsId((prevOptions) => [...prevOptions, parseInt(event.target.value)]);
-      setSelectedOptionsString((prevOptions) => [...prevOptions, event.target["options"][event.target["options"].selectedIndex].text]);
-    }
+
 
     console.log("User Selected Product - ", event.target["options"][event.target["options"].selectedIndex].text);
 
@@ -162,10 +160,6 @@ export default function Compare() {
       setSizeOfProduct(response["tamanos"]);
 
 
-
-
-
-
     } catch (error) {
       console.log(error);
     }
@@ -183,7 +177,22 @@ export default function Compare() {
 
     const result = await getResultsOfCart(rd)
     console.log(result)
+    setResultMarkets(result)
   }
+
+  function HandleNewProduct() {
+    if (selectedProduct && !selectedOptionsId.includes(idProduct) && sizeOfProduct.length == 1) {
+      setSelectedOptionsId((prevOptions) => [...prevOptions, idProduct]);
+      setSelectedOptionsString((prevOptions) => [...prevOptions, selectedProduct]);
+      setSelectedOptionsSizesId((prevOptions) => [...prevOptions, sizeOfProduct[0].id]);
+      setSelectedOptionsSizesString((prevOptions) => [...prevOptions, sizeOfProduct[0].rango_texto]);
+    }
+
+  }
+
+  useEffect(() => {
+    HandleNewProduct()
+  }, [sizeOfProduct]);
 
   useEffect(() => {
     (async () => {
@@ -378,6 +387,21 @@ export default function Compare() {
                         Eliminar
                       </button>
                     </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="sm:col-span-6 w-full">
+                <h2 className="text-base font-semibold leading-7 text-gray-900">Supermercados resultantes</h2>
+                <ul className="">
+                  {resultMarkets?.sort((n1,n2) => parseInt(n1.precio) - parseInt(n2.precio)).map((market, index) => (
+                      <li className={`flex mt-1 items-center justify-between w-full mb-3 ${index < selectedOptionsString.length - 1 ? "border-b" : ""}`} key={index}>
+                        <p className="">{market.nombre}</p>
+                        {""}
+                        <p className="">{market.direccion}</p>
+                        {""}
+                        <p className="">${market.precio}</p>
+                      </li>
                   ))}
                 </ul>
               </div>

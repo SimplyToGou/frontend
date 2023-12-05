@@ -1,0 +1,14 @@
+
+Mtypescript:S1128"*Remove this unused import of 'getDataApi'.(Ì¿¼˜8 ´¼»Ã1
+\typescript:S3863"4'@/services/api-simply-to-gou' import is duplicated.(×ó–¶úÿÿÿÿ8¢´¼»Ã1
+\typescript:S3863"4'@/services/api-simply-to-gou' import is duplicated.(ÜÚï¡ûÿÿÿÿ8´´¼»Ã1
+Ltypescript:S1128	")Remove this unused import of 'IProducts'.(é‘Ì8´´¼»Ã1
+Ptypescript:S1128"(Remove this unused import of 'Products'.(È»Ùÿÿÿÿÿ8´´¼»Ã1
+Otypescript:S1128"'Remove this unused import of 'Comunas'.(Ñˆìşÿÿÿÿ8´´¼»Ã1
+Wtypescript:S1128"/Remove this unused import of 'SizesOfProducts'.(âåØıÿÿÿÿ8´´¼»Ã1
+Wtypescript:S1854"4Remove this useless assignment to variable "budget".(¥¯§ñ8´´¼»Ã1
+dtypescript:S1854"<Remove this useless assignment to variable "selectedSizeId".(Áš£äùÿÿÿÿ8´´¼»Ã1
+ntypescript:S1854$"FRemove this useless assignment to variable "MIN_QUANTITY_OF_PRODUCTS".(™£À¸øÿÿÿÿ8´´¼»Ã1
+Btypescript:S6479ş"Do not use Array index in keys(…àƒ8´´¼»Ã1
+ztypescript:S4043"WMove this array "sort" operation to a separate statement or replace it with "toSorted".(şåá78´´¼»Ã1
+Btypescript:S6479"Do not use Array index in keys(Éõ€8´´¼»Ã1
